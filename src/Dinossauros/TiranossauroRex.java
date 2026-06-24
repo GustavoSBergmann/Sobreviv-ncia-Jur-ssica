@@ -12,4 +12,9 @@ public class TiranossauroRex extends Dinossauro{
     public TiranossauroRex(int linha, int coluna){
         super(linha, coluna, 3);
     }
+    
+    @Override
+    public char getSimbolo() {
+        return 'R';
+    }
 }

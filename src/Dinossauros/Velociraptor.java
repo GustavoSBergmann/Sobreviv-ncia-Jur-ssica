@@ -13,4 +13,9 @@ public class Velociraptor extends Dinossauro{
     public Velociraptor(int linha, int coluna){
         super(linha, coluna, 2);
     }
+    
+    @Override
+    public char getSimbolo() {
+        return 'V';
+    }
 }

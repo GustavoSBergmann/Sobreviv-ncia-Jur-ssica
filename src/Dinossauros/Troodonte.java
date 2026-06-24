@@ -13,4 +13,9 @@ public class Troodonte extends Dinossauro{
     public Troodonte(int linha, int coluna){
         super(linha, coluna, 2);
     }
+    
+    @Override
+    public char getSimbolo() {
+        return 'C';
+    }
 }

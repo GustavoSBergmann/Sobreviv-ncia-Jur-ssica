@@ -1,21 +1,27 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Jogador_Mapa_Outros;
+
+import Caixas_E_Itens.Item;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author Cliente
  */
 public class Inventario {
-    private boolean possuiKitMedico;
-    private boolean possuiBastaoEletrico;
-    private int municaoDardos;
     
-    public Inventario(){
-        possuiKitMedico = false;
-        possuiBastaoEletrico = false;
-        municaoDardos = 0;
+    private List<Item> itens;
+
+    public Inventario() {
+        itens = new ArrayList<>();
+    }
+
+    public void adicionar(Item item) {
+        itens.add(item);
+    }
+    
+    public void remover(Item item){
+        itens.remove(item);
     }
 }

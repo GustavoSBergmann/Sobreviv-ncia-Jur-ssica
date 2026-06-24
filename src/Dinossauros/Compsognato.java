@@ -11,4 +11,8 @@ public class Compsognato extends Dinossauro implements ConteudoCaixa{
         super(linha, coluna, 1);
     }
     
+    @Override
+    public char getSimbolo() {
+        return 'C';
+    }
 }

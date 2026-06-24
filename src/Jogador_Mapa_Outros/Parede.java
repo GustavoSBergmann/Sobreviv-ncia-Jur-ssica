@@ -14,4 +14,8 @@ public class Parede extends Entidade{
         super(linha, coluna);
     }
     
+    @Override
+    public char getSimbolo() {
+        return '#';
+    }
 }
