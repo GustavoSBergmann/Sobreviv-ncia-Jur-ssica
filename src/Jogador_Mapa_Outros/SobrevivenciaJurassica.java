@@ -2,7 +2,9 @@ package Jogador_Mapa_Outros;
 
 import Dinossauros.*;
 import Caixas_E_Itens.*;
+import Combate.Combate;
 
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -24,7 +26,7 @@ public class SobrevivenciaJurassica {
                 int percepcao = menuDificuldade();
                 jogar(percepcao);
             } else {
-                System.out.println("\n  Até a próxima! Sobreviva sempre... 🦕");
+                System.out.println("\n  Até a próxima! Sobreviva sempre...");
                 continuar = false;
             }
         }
@@ -54,7 +56,7 @@ public class SobrevivenciaJurassica {
         System.out.println("     2 - Sair                  ");
         System.out.println("  ---------------------------  ");
         System.out.print("  Escolha: ");
-        return leitor.nextInt();
+        return lerOpcaoInt();
     }
 
     private static int menuDificuldade() {
@@ -67,7 +69,7 @@ public class SobrevivenciaJurassica {
         System.out.println("     3 - Difícil (Percepção 1 — esquiva difícil)       ");
         System.out.println("  ----------------------------------------------------  ");
         System.out.print("  Escolha: ");
-        int escolha = leitor.nextInt();
+        int escolha = lerOpcaoInt();
         int percepcao;
         switch (escolha) {
             case 1:
@@ -83,7 +85,7 @@ public class SobrevivenciaJurassica {
         return percepcao;
     }
 
-    public static void limparTela() {
+    private static void limparTela() {
         System.out.println();
         System.out.println();
         System.out.println();
@@ -111,6 +113,7 @@ public class SobrevivenciaJurassica {
                     if (!jogador.estaVivo()) {
                         break;
                     }
+                    processarMovimentoDinossauros(jogador, mapa);
                     break;
 
                 case 2:
@@ -129,18 +132,34 @@ public class SobrevivenciaJurassica {
                     break;
 
                 default:
+                    System.out.println("  Opção inválida! Tente novamente.");
                     break;
             }
         }
-        mapa.imprimirMapa();
+        exibirResultado(jogador, mapa);
+        menuPosJogo(percepcao, mapa, jogador);
+    }
+
+    private static int menuJogo(Jogador jogador) {
+        System.out.println("  ------------------------------  ");
+        System.out.println("              AÇÕES               ");
+        System.out.println("  ------------------------------  ");
+        System.out.println("     1 - Movimentar               ");
+        System.out.println("     2 - Usar Kit Médico"
+                + (jogador.getInventario().possuiKitMedico() ? " " : " (sem kit)"));
+        System.out.println("     3 - DEBUG (revelar mapa)     ");
+        System.out.println("     4 - Sair do jogo             ");
+        System.out.println("  ------------------------------  ");
+        System.out.print("  Escolha: ");
+        return lerOpcaoInt();
     }
 
     private static void processarMovimento(Jogador jogador, Mapa mapa) {
         System.out.println();
         System.out.println("  Destino (ex: B3 ou b3). Posições adjacentes válidas:");
         exibirPossiveisMovimentos(jogador, mapa);
-        System.out.println("  Destino: ");
-        String entrada = leitor.nextLine();
+        System.out.print("  Destino: ");
+        String entrada = leitor.nextLine().trim();
 
         if (entrada.length() < 2) {
             System.out.println("  Entrada inválida. Use o formato LetraNumero (ex: B3).");
@@ -149,8 +168,13 @@ public class SobrevivenciaJurassica {
 
         char letra = entrada.charAt(0);
         String numStr = entrada.substring(1);
-        int num = Integer.parseInt(numStr);
-
+        int num;
+        try {
+            num = Integer.parseInt(numStr);
+        } catch (NumberFormatException e) {
+            System.out.println("  Formato Inválido! Exemplo: B3");
+            return;
+        }
         int novaLinha = mapa.letraParaLinha(letra);
         int novaColuna = mapa.numeroParaColuna(num);
 
@@ -175,7 +199,48 @@ public class SobrevivenciaJurassica {
         processarCaixa(jogador, mapa, jogador.getLinha(), jogador.getColuna());
     }
 
-    public static void processarCaixa(Jogador jogador, Mapa mapa, int linha, int coluna) {
+    private static void exibirPossiveisMovimentos(Jogador jogador, Mapa mapa) {
+        int linhaAtual = jogador.getLinha();
+        int colunaAtual = jogador.getColuna();
+
+        int[][] direcoes = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+        System.out.print("  ");
+        for (int[] d : direcoes) {
+            int possLinha = linhaAtual + d[0];
+            int possColuna = colunaAtual + d[1];
+
+            if (possLinha >= 0 && possLinha < mapa.getTamanho()
+                    && possColuna >= 0 && possColuna < mapa.getTamanho()) {
+                System.out.print(mapa.linhaParaLetra(possLinha) + (possColuna + 1) + "   ");
+            }
+        }
+        System.out.println();
+    }
+
+    private static void processarMovimentoDinossauros(Jogador jogador, Mapa mapa) {
+        List<Dinossauro> atacantes = mapa.moverDinossauros();
+
+        for (Dinossauro dino : atacantes) {
+            if (!jogador.estaVivo()) {
+                break;
+            }
+            if (!dino.estaVivo()) {
+                continue;
+            }
+
+            System.out.println();
+            System.out.println("  Um " + dino.getClass().getSimpleName() + " chegou até você!");
+
+            Combate combate = new Combate(jogador, dino, mapa, leitor);
+            boolean venceu = combate.executar(true);
+
+            if (venceu && !dino.estaVivo()) {
+                mapa.removerDinossauro(dino);
+            }
+        }
+    }
+
+    private static void processarCaixa(Jogador jogador, Mapa mapa, int linha, int coluna) {
         CaixaDeSuprimentos caixa = mapa.getCaixaEm(linha, coluna);
         if (caixa == null || caixa.foiAberta()) {
             return;
@@ -188,35 +253,40 @@ public class SobrevivenciaJurassica {
         conteudo.aoSerEncontrado(jogador, mapa, leitor);
     }
 
-    public static void exibirPossiveisMovimentos(Jogador jogador, Mapa mapa) {
-        int linhaAtual = jogador.getLinha();
-        int colunaAtual = jogador.getColuna();
-
-        int[][] direcoes = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
-        System.out.print("  ");
-        for (int[] d : direcoes) {
-            int possLinha = linhaAtual + d[0];
-            int possColuna = colunaAtual + d[1];
-
-            if (possLinha >= 0 && possLinha < mapa.getTamanho()
-                    && possColuna >= 0 && possColuna < mapa.getTamanho()) {
-                System.out.println(mapa.linhaParaLetra(possLinha) + (possColuna + 1) + "   ");
-            }
+    private static void exibirResultado(Jogador jogador, Mapa mapa) {
+        if (mapa.todosDerrotados() && jogador.estaVivo()) {
+            System.out.println("  --------------------------------------------  ");
+            System.out.println("          PARABÉNS! VOCÊ SOBREVIVEU!            ");
+            System.out.println("      Todos os dinossauros foram derrotados     ");
+            System.out.println("  --------------------------------------------  ");
+        } else {
+            System.out.println("  --------------------------------------------  ");
+            System.out.println("           VOCÊ MORREU! FIM DE JOGO!            ");
+            System.out.println("        Os dinossauros dominaram o parque       ");
+            System.out.println("  --------------------------------------------  ");
         }
         System.out.println();
     }
 
-    private static int menuJogo(Jogador jogador) {
-        System.out.println("  ------------------------------  ");
-        System.out.println("              AÇÕES               ");
-        System.out.println("  ------------------------------  ");
-        System.out.println("     1 - Movimentar               ");
-        System.out.println("     2 - Usar Kit Médico"
-                + (jogador.getInventario().possuiKitMedico() ? " " : " (sem kit)"));
-        System.out.println("     3 - DEBUG (revelar mapa)     ");
-        System.out.println("     4 - Sair do jogo             ");
-        System.out.println("  ------------------------------  ");
+    private static void menuPosJogo(int percepcao, Mapa mapaAtual, Jogador jogadorAtual) {
+        System.out.println("  O que deseja fazer?");
+        System.out.println("  1 - Novo Jogo (volta ao menu inicial)");
+        System.out.println("  2 - Sair");
         System.out.print("  Escolha: ");
-        return leitor.nextInt();
+        int opcao = leitor.nextInt();
+        if (opcao == 1) {
+            exibirBoasVindas();
+            // Retorna ao main loop naturalmente
+        }
+        // Opção 2 ou qualquer outra: encerra (retorna ao while do main)
+    }
+
+    private static int lerOpcaoInt() {
+        try {
+            String linha = leitor.nextLine().trim();
+            return Integer.parseInt(linha);
+        } catch (Exception e) {
+            return -1;
+        }
     }
 }

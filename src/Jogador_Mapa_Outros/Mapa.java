@@ -52,6 +52,7 @@ public class Mapa {
         //Insere objeto Jogador no mapa
         jogador.setPosicao(0, 0);
         jogador.setSaude(jogador.getSaudeMaxima());
+        jogador.recuperaSaude();
         mapa[0][0] = jogador;
 
         //Insere objeto TiranossauroRex no mapa
@@ -85,7 +86,6 @@ public class Mapa {
     private void insereParedes() {
         int total = tamanho * tamanho;
         int numParedes = (int) (total * 0.20);
-        System.out.println(numParedes);
         int colocadas = 0;
         for (int p = 0; p < numParedes * 2 && colocadas < numParedes; p++) {
             int lin = rand.nextInt(tamanho);
@@ -130,7 +130,7 @@ public class Mapa {
             int lin = rand.nextInt(tamanho);
             int col = rand.nextInt(tamanho);
 
-            if ((lin == 0 && col == 0) && camadaCaixas[lin][col] == null
+            if (!(lin == 0 && col == 0) && camadaCaixas[lin][col] == null
                     && !(mapa[lin][col] instanceof Parede)) {
                 camadaCaixas[lin][col] = new CaixaDeSuprimentos(conteudo);
                 return;
@@ -158,10 +158,12 @@ public class Mapa {
             for (int i = 0; i < tamanho; i++) {
                 System.out.print(" " + (char) ('A' + i) + "  ");
                 for (int j = 0; j < tamanho; j++) {
-                    if (mapa[i][j] == null) {
+                    if (mapa[i][j] == null && camadaCaixas[i][j] == null) {
                         System.out.print(" .");
-                    } else {
+                    } else if (camadaCaixas[i][j] == null) {
                         System.out.print(" " + mapa[i][j].getSimbolo());
+                    } else {
+                        System.out.print(" " + camadaCaixas[i][j].getSimbolo());
                     }
                 }
                 System.out.println();
@@ -202,7 +204,7 @@ public class Mapa {
         if (mapa[linha][coluna] instanceof Dinossauro) {
             return (Dinossauro) mapa[linha][coluna];
         }
-        mapa[linha][coluna] = null;
+        mapa[jogador.getLinha()][jogador.getColuna()] = null;
         jogador.setPosicao(linha, coluna);
         mapa[linha][coluna] = jogador;
 
@@ -292,7 +294,7 @@ public class Mapa {
     }
 
     public int[] embaralhar(int[] array) {
-        for (int i = array.length; i > 0; i--) {
+        for (int i = array.length - 1; i > 0; i--) {
             int j = rand.nextInt(i + 1);
             int temp = array[i];
             array[i] = array[j];
@@ -317,6 +319,10 @@ public class Mapa {
     // -----------------
     public CaixaDeSuprimentos getCaixaEm(int linha, int coluna) {
         return camadaCaixas[linha][coluna];
+    }
+
+    public void removerCaixa(int linha, int coluna) {
+        camadaCaixas[linha][coluna] = null;
     }
 
     public List<int[]> posicoesParaFuga() {
@@ -344,10 +350,6 @@ public class Mapa {
         }
 
         return livres;
-    }
-
-    public void removerCaixa(int linha, int coluna) {
-        camadaCaixas[linha][coluna] = null;
     }
 
     public int letraParaLinha(char letra) {

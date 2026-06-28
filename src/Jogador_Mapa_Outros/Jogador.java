@@ -25,8 +25,8 @@ public class Jogador extends Personagem {
     }
     
     public String getStatusString(){
-        return "\n  Saúde: " + getSaude() + "/" + getSaudeMaxima() + 
-               "\n  Percepção: " + getPercepcao() + "\n";
+        return "  Saúde: " + getSaude() + "/" + getSaudeMaxima() + 
+               "\n  Percepção: " + getPercepcao();
     }
     
     public void coletarItem(Item item){
