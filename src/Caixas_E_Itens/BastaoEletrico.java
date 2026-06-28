@@ -1,9 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Caixas_E_Itens;
+
 import Jogador_Mapa_Outros.Jogador;
+import Jogador_Mapa_Outros.Mapa;
+import java.util.Scanner;
 
 /**
  *
@@ -14,9 +13,14 @@ public class BastaoEletrico extends Item {
     public BastaoEletrico() {
         super("Bastão Elétrico");
     }
-    
+
     @Override
-    public void usar(Jogador jogador){
-        
+    public void aoSerEncontrado(Jogador jogador, Mapa mapa, Scanner leitor) {
+        jogador.coletarItem(this);
+        System.out.println("  Bastão Elétrico Equipado");
+    }
+
+    public void usar(Jogador jogador) {
+        //Só sout
     }
 }

@@ -1,6 +1,6 @@
 package Jogador_Mapa_Outros;
 
-import Caixas_E_Itens.Item;
+import Caixas_E_Itens.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
  * @author Cliente
  */
 public class Inventario {
-    
+
     private List<Item> itens;
 
     public Inventario() {
@@ -20,8 +20,58 @@ public class Inventario {
     public void adicionar(Item item) {
         itens.add(item);
     }
-    
-    public void remover(Item item){
+
+    public void remover(Item item) {
         itens.remove(item);
     }
+    
+    public List<Item> getItens(){
+        return itens;
+    }
+
+    public boolean possuiKitMedico() {
+        for (Item item : itens) {
+            if (item instanceof KitMedico) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public KitMedico getKitMedico(){
+        for(Item item : itens){
+            if(item instanceof KitMedico){
+                return (KitMedico)item;
+            }
+        }
+        return null;
+    }
+    
+    public boolean possuiBastaoEletrico(){
+        for (Item item : itens) {
+            if (item instanceof BastaoEletrico) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean possuiLancaDardos(){
+        for (Item item : itens) {
+            if (item instanceof LancaDardos) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public LancaDardos getLancaDardos(){
+        for(Item item : itens){
+            if(item instanceof LancaDardos){
+                return (LancaDardos)item;
+            }
+        }
+        return null;
+    }
+
 }

@@ -8,8 +8,20 @@ import Jogador_Mapa_Outros.Entidade;
 public class CaixaDeSuprimentos extends Entidade{
     private ConteudoCaixa conteudo;
     
-    public CaixaDeSuprimentos(int linha, int coluna){
-        super(linha, coluna);
+    public CaixaDeSuprimentos(ConteudoCaixa conteudo){
+        this.conteudo = conteudo;
+    }
+    
+    public ConteudoCaixa getConteudo(){
+        return conteudo;
+    }
+    
+    public boolean foiAberta(){
+        return (conteudo == null);
+    }
+    
+    public void abrir(){
+        conteudo = null;
     }
     
     @Override

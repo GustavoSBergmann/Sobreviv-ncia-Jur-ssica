@@ -1,9 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Caixas_E_Itens;
-import Jogador_Mapa_Outros.Jogador;
+import Jogador_Mapa_Outros.*;
+import java.util.Scanner;
 
 /**
  *
@@ -20,5 +17,6 @@ public abstract class Item implements ConteudoCaixa{
         return nome;
     }
     
-    public abstract void usar(Jogador jogador);
+    @Override
+    public abstract void aoSerEncontrado(Jogador jogador, Mapa mapa, Scanner leitor);
 }

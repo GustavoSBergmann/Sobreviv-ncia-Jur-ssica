@@ -1,9 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Caixas_E_Itens;
-import Jogador_Mapa_Outros.Jogador;
+import Jogador_Mapa_Outros.*;
+import java.util.Scanner;
 
 /**
  *
@@ -15,8 +12,13 @@ public class KitMedico extends Item {
         super("Kit Médico");
     }
     
-    @Override
     public void usar(Jogador jogador){
         jogador.recuperaSaude();
     }
+    
+    @Override
+    public void aoSerEncontrado(Jogador jogador, Mapa mapa, Scanner leitor){
+        jogador.coletarItem(this);
+    }
 }
+

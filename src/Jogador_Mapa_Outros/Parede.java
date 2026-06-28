@@ -10,9 +10,6 @@ package Jogador_Mapa_Outros;
  */
 public class Parede extends Entidade{
     //Serve apenas como obstáculo
-    public Parede(int linha, int coluna){
-        super(linha, coluna);
-    }
     
     @Override
     public char getSimbolo() {

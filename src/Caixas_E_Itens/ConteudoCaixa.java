@@ -1,13 +1,14 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
 package Caixas_E_Itens;
 
+import Jogador_Mapa_Outros.*;
+import java.util.Scanner;
+
 /**
- *
- * @author Cliente
+ * Interface para qualquer coisa que pode estar dentro de uma Caixa de Suprimentos.
+ * Descreve "o que faz" (ser conteúdo de caixa), não "o que é".
  */
 public interface ConteudoCaixa {
-    
+    // Marca algo como possível conteúdo de caixa de suprimentos.
+    // Pode ser um Item ou um Compsognato surpresa.
+    void aoSerEncontrado(Jogador jogador, Mapa mapa, Scanner leitor);
 }

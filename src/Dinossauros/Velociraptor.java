@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Dinossauros;
 
 /**
@@ -14,8 +10,33 @@ public class Velociraptor extends Dinossauro{
         super(linha, coluna, 2);
     }
     
+    public int getDanoAtaque() {
+        return 1;
+    }
+
+    public int getCasasDeMovimento() {
+        return 2;
+    }
+
+    public boolean vulneravelMaosNuas() {
+        return true;
+    }
+
+    public boolean vulneravelDardos() {
+        return false;
+    }
+
+    public boolean seMove() {
+        return true;
+    }
+    
     @Override
     public char getSimbolo() {
         return 'V';
+    }
+    
+    @Override
+    public String toString(){
+        return "Velociraptor (saúde: " + getSaude() + ")";
     }
 }
