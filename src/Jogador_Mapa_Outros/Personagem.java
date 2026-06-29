@@ -16,17 +16,17 @@ public abstract class Personagem extends Entidade {
         this.saudeMaxima = saude;
     }
     
+    public void setPosicao(int linha, int coluna) {
+        this.linha = linha;
+        this.coluna = coluna;
+    }
+    
     public int getLinha() {
         return linha;
     }
 
     public int getColuna() {
         return coluna;
-    }
-
-    public void setPosicao(int linha, int coluna) {
-        this.linha = linha;
-        this.coluna = coluna;
     }
 
     public int getSaude(){

@@ -33,12 +33,12 @@ public class TiranossauroRex extends Dinossauro {
     public boolean seMove() {
         return false;
     }
-
+    
     @Override
-    public char getSimbolo() {
+    public char getCaractere(){
         return 'R';
     }
-    
+
     @Override
     public String toString(){
         return "Tiranossauro Rex (saúde: " + getSaude() + ")";

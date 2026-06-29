@@ -13,7 +13,7 @@ public class LancaDardos extends Item {
     private int municao;
 
     public LancaDardos() {
-        super("Dardos");
+        super("Lança-Dardos");
         this.municao = 1;
     }
 
@@ -26,10 +26,7 @@ public class LancaDardos extends Item {
     }
 
     public boolean temMunicao() {
-        if (municao > 0) {
-            return true;
-        }
-        return false;
+        return (municao > 0);
     }
 
     public int atirar() {

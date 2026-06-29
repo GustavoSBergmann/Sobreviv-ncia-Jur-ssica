@@ -50,10 +50,9 @@ public class Jogador extends Personagem {
             System.out.println("  Você não possui Kit Médico.");
         }
     }
-
+    
     @Override
-    public char getSimbolo() {
+    public char getCaractere(){
         return 'J';
     }
-
 }

@@ -7,5 +7,5 @@ package Jogador_Mapa_Outros;
 // Qualquer coisa que esteja presente no mapa
 public abstract class Entidade {
 
-    public abstract char getSimbolo();
+    public abstract char getCaractere();
 }

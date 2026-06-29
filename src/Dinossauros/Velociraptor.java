@@ -31,7 +31,7 @@ public class Velociraptor extends Dinossauro{
     }
     
     @Override
-    public char getSimbolo() {
+    public char getCaractere(){
         return 'V';
     }
     

@@ -29,12 +29,12 @@ public class Troodonte extends Dinossauro {
     public boolean seMove() {
         return true;
     }
-
+    
     @Override
-    public char getSimbolo() {
+    public char getCaractere(){
         return 'T';
     }
-    
+
     @Override
     public String toString(){
         return "Troodonte (saúde: " + getSaude() + ")";

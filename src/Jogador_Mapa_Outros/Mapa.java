@@ -22,6 +22,7 @@ public class Mapa {
     private Random rand = new Random();
 
     private int tamanho;
+    private boolean debugAtivo = false;
 
     public Mapa(int tamanho) {
         this.tamanho = tamanho;
@@ -139,7 +140,6 @@ public class Mapa {
     }
 
     public void imprimirMapa() {
-        System.out.println();
         // Cabeçalho com números de coluna
         System.out.print("    ");
         for (int j = 0; j < tamanho; j++) {
@@ -147,36 +147,99 @@ public class Mapa {
         }
         System.out.println();
 
+        // Linha Superior
         System.out.print("   +");
         for (int j = 0; j < tamanho; j++) {
             System.out.print("--");
         }
         System.out.println("+");
 
+        // -------------------------------------------------
+        // Impressão dos elementos
         try {
 
             for (int i = 0; i < tamanho; i++) {
-                System.out.print(" " + (char) ('A' + i) + "  ");
+                // Letras de referência das linhas
+                System.out.print(" " + (char) ('A' + i) + " |");
+
                 for (int j = 0; j < tamanho; j++) {
-                    if (mapa[i][j] == null && camadaCaixas[i][j] == null) {
-                        System.out.print(" .");
-                    } else if (camadaCaixas[i][j] == null) {
-                        System.out.print(" " + mapa[i][j].getSimbolo());
-                    } else {
-                        System.out.print(" " + camadaCaixas[i][j].getSimbolo());
-                    }
+                    System.out.print(" " + getCelulaVisivel(i, j));
                 }
-                System.out.println();
+                System.out.println(" |");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        // -------------------------------------------------
+
+        // Linha Inferior
         System.out.print("   +");
         for (int j = 0; j < tamanho; j++) {
             System.out.print("--");
         }
         System.out.println("+");
-        System.out.println();
+    }
+
+    private char getCelulaVisivel(int linha, int coluna) {
+        if (debugAtivo) {
+            return getSimbolo(linha, coluna);
+        }
+
+        int linJogador = jogador.getLinha();
+        int colJogador = jogador.getColuna();
+
+        if (linha == linJogador && coluna == colJogador) {
+            return 'J';
+        }
+
+        if (linha != linJogador && coluna != colJogador) {
+            return '.';
+        }
+
+        if (temObstaculoEntre(linJogador, colJogador, linha, coluna)) {
+            return '.';
+        }
+
+        return getSimbolo(linha, coluna);
+    }
+
+    private boolean temObstaculoEntre(int linJogador, int colJogador, int linha, int coluna) {
+        if (linJogador == linha) {
+            int inicio = Math.min(colJogador, coluna) + 1;
+            int fim = Math.max(colJogador, coluna);
+            for (int c = inicio; c < fim; c++) {
+                if (eObstaculo(linJogador, c)) {
+                    return true;
+                }
+            }
+        } else {
+            int inicio = Math.min(linJogador, linha) + 1;
+            int fim = Math.max(linJogador, linha);
+            for (int l = inicio; l < fim; l++) {
+                if (eObstaculo(l, colJogador)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean eObstaculo(int l, int c) {
+        return (mapa[l][c] instanceof Parede
+                || mapa[l][c] instanceof Dinossauro
+                || camadaCaixas[l][c] != null);
+    }
+
+    private char getSimbolo(int linha, int coluna) {
+        Entidade entidade = mapa[linha][coluna];
+        CaixaDeSuprimentos caixa = camadaCaixas[linha][coluna];
+
+        if (entidade != null) {
+            return entidade.getCaractere();
+        } else if (caixa != null) {
+            return caixa.getCaractere();
+        }
+        return '.';
     }
 
     // -----------------
@@ -350,6 +413,11 @@ public class Mapa {
         }
 
         return livres;
+    }
+
+    public void setResetDebug() {
+        debugAtivo = !debugAtivo;
+        System.out.println("  [DEBUG] " + (debugAtivo ? "ATIVADO" : "DESATIVADO") + ".");
     }
 
     public int letraParaLinha(char letra) {

@@ -19,8 +19,4 @@ public class BastaoEletrico extends Item {
         jogador.coletarItem(this);
         System.out.println("  Bastão Elétrico Equipado");
     }
-
-    public void usar(Jogador jogador) {
-        //Só sout
-    }
 }

@@ -3,6 +3,8 @@ package Dinossauros;
 import Caixas_E_Itens.ConteudoCaixa;
 import Jogador_Mapa_Outros.Jogador;
 import Jogador_Mapa_Outros.Mapa;
+import Combate.Combate;
+
 import java.util.Scanner;
 import java.util.Random;
 
@@ -49,11 +51,11 @@ public class Compsognato extends Dinossauro implements ConteudoCaixa {
             System.out.println("  O Compsognato te mordeu! Saúde: " + jogador.getSaude());
         }
 
-        //new Combate(jogador, this, mapa, leitor).executar(false);
+        new Combate(jogador, this, mapa, leitor).executar(false);
     }
     
     @Override
-    public char getSimbolo() {
+    public char getCaractere(){
         return 'C';
     }
     

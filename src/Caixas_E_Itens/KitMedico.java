@@ -14,6 +14,7 @@ public class KitMedico extends Item {
     
     public void usar(Jogador jogador){
         jogador.recuperaSaude();
+        System.out.println("  [Kit Médico] Saúde totalmente restaurada para " + jogador.getSaudeMaxima() + "!");
     }
     
     @Override

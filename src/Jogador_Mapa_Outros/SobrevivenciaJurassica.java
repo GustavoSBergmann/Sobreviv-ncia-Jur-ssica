@@ -34,7 +34,9 @@ public class SobrevivenciaJurassica {
 
     }
 
+    // --------------
     //  MENUS
+    // --------------
     private static void exibirBoasVindas() {
         limparTela();
 
@@ -85,13 +87,9 @@ public class SobrevivenciaJurassica {
         return percepcao;
     }
 
-    private static void limparTela() {
-        System.out.println();
-        System.out.println();
-        System.out.println();
-    }
-
+    // ---------------------------
     //  LOOP PRINCIPAL DO JOGO
+    // ---------------------------
     private static void jogar(int percepcao) {
         Mapa mapa = new Mapa(10);
         Jogador jogador = new Jogador(0, 0, percepcao);
@@ -119,12 +117,14 @@ public class SobrevivenciaJurassica {
                 case 2:
                     if (jogador.getInventario().possuiKitMedico()) {
                         jogador.usarKitMedico();
+                        processarMovimentoDinossauros(jogador, mapa);
                     } else {
                         System.out.println("  Você não possui Kit Médico.");
                     }
                     break;
 
                 case 3:
+                    mapa.setResetDebug();
                     break;
 
                 case 4:
@@ -154,6 +154,9 @@ public class SobrevivenciaJurassica {
         return lerOpcaoInt();
     }
 
+    // ------------------------------
+    //  PROCESSAMENTO DE MOVIMENTO
+    // ------------------------------
     private static void processarMovimento(Jogador jogador, Mapa mapa) {
         System.out.println();
         System.out.println("  Destino (ex: B3 ou b3). Posições adjacentes válidas:");
@@ -187,7 +190,7 @@ public class SobrevivenciaJurassica {
         Dinossauro dinoEncontrado = mapa.moverJogador(novaLinha, novaColuna);
 
         if (dinoEncontrado != null) {
-            boolean venceu = true; // = new Combate();
+            boolean venceu = new Combate(jogador, dinoEncontrado, mapa, leitor).executar(false);
             if (!venceu) {
                 return;
             }
@@ -217,6 +220,9 @@ public class SobrevivenciaJurassica {
         System.out.println();
     }
 
+    // ---------------------------
+    //  MOVIMENTO DINOSSAUROS
+    // ---------------------------
     private static void processarMovimentoDinossauros(Jogador jogador, Mapa mapa) {
         List<Dinossauro> atacantes = mapa.moverDinossauros();
 
@@ -240,6 +246,9 @@ public class SobrevivenciaJurassica {
         }
     }
 
+    // ---------------------------
+    //  CAIXA DE SUPRIMENTOS
+    // ---------------------------
     private static void processarCaixa(Jogador jogador, Mapa mapa, int linha, int coluna) {
         CaixaDeSuprimentos caixa = mapa.getCaixaEm(linha, coluna);
         if (caixa == null || caixa.foiAberta()) {
@@ -253,6 +262,9 @@ public class SobrevivenciaJurassica {
         conteudo.aoSerEncontrado(jogador, mapa, leitor);
     }
 
+    // ---------------------------
+    //  RESULTADO FINAL
+    // ---------------------------
     private static void exibirResultado(Jogador jogador, Mapa mapa) {
         if (mapa.todosDerrotados() && jogador.estaVivo()) {
             System.out.println("  --------------------------------------------  ");
@@ -273,7 +285,7 @@ public class SobrevivenciaJurassica {
         System.out.println("  1 - Novo Jogo (volta ao menu inicial)");
         System.out.println("  2 - Sair");
         System.out.print("  Escolha: ");
-        int opcao = leitor.nextInt();
+        int opcao = lerOpcaoInt();
         if (opcao == 1) {
             exibirBoasVindas();
             // Retorna ao main loop naturalmente
@@ -281,6 +293,9 @@ public class SobrevivenciaJurassica {
         // Opção 2 ou qualquer outra: encerra (retorna ao while do main)
     }
 
+    // --------------
+    // OUTROS
+    // --------------
     private static int lerOpcaoInt() {
         try {
             String linha = leitor.nextLine().trim();
@@ -288,5 +303,11 @@ public class SobrevivenciaJurassica {
         } catch (Exception e) {
             return -1;
         }
+    }
+
+    private static void limparTela() {
+        System.out.println();
+        System.out.println();
+        System.out.println();
     }
 }

@@ -43,10 +43,12 @@ public class Combate {
             if (!turnoAtaqueDino()) {
                 return false;
             }
-            //if(!dino.estaVivo()) return true;
+            if (!dino.estaVivo()) {
+                return true;
+            }
         }
 
-        while (!jogador.estaVivo() && !dino.estaVivo()) {
+        while (jogador.estaVivo() && dino.estaVivo()) {
             System.out.println("  ──────────────────────────────────────");
             System.out.println("  Seu estado: Saúde " + jogador.getSaude() + "/" + jogador.getSaudeMaxima());
             System.out.println("  " + dino.getClass().getSimpleName() + " estado: Saúde " + dino.getSaude() + "/" + dino.getSaudeMaxima());
@@ -66,7 +68,7 @@ public class Combate {
             }
 
             System.out.println("  3 - Fugir");
-            System.out.println("  Escolha: ");
+            System.out.print("  Escolha: ");
             int opcao = lerOpcaoInt();
 
             if (opcao == 3) {
@@ -96,6 +98,10 @@ public class Combate {
 
             if (!dino.estaVivo()) {
                 break;
+            }
+
+            if (!turnoAtaqueDino()) {
+                return false;
             }
 
         }
@@ -220,7 +226,7 @@ public class Combate {
     private String nomeAtaqueCorpo() {
         return jogador.getInventario().possuiBastaoEletrico() ? "Bastão Elétrico" : "Mãos Nuas";
     }
-    
+
     private int lerOpcaoInt() {
         try {
             String linha = leitor.nextLine().trim();
