@@ -92,13 +92,13 @@ public class SobrevivenciaJurassica {
     // ---------------------------
     private static void jogar(int percepcao) {
         Mapa mapa = new Mapa(10);
-        Jogador jogador = new Jogador(0, 0, percepcao);
+        Jogador jogador = new Jogador(percepcao);
         mapa.setJogador(jogador);
         mapa.gerarMapaAleatorio();
 
         boolean jogando = true;
 
-        while (jogando) {
+        while (jogando && jogador.estaVivo() && !mapa.todosDerrotados()) {
             mapa.imprimirMapa();
             System.out.println("  " + jogador.getStatusString());
             System.out.println();

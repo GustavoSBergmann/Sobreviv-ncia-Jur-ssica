@@ -1,6 +1,4 @@
-package Jogador_Mapa_Outros;
-
-import Caixas_E_Itens.*;
+package Caixas_E_Itens;
 
 import java.util.ArrayList;
 import java.util.List;
