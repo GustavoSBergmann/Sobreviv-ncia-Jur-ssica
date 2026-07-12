@@ -1,11 +1,13 @@
 package Jogador_Mapa_Outros;
 
-import Caixas_E_Itens.*;
-/**
- *
- * @author Cliente
- */
+import Caixas_E_Itens.Inventario;
+import Caixas_E_Itens.Item;
+import Caixas_E_Itens.KitMedico;
+import Caixas_E_Itens.LancaDardos;
+
 public class Jogador extends Personagem {
+
+    private static final long serialVersionUID = 1L;
 
     private int percepcao;
     private Inventario inventario;
@@ -19,40 +21,39 @@ public class Jogador extends Personagem {
     public int getPercepcao() {
         return percepcao;
     }
-    
-    public Inventario getInventario(){
+
+    public Inventario getInventario() {
         return inventario;
     }
-    
-    public String getStatusString(){
-        return "  Saúde: " + getSaude() + "/" + getSaudeMaxima() + 
-               "\n  Percepção: " + getPercepcao();
+
+    public String getStatusString() {
+        return "Saúde: " + getSaude() + "/" + getSaudeMaxima()
+                + "   |   Percepção: " + getPercepcao();
     }
-    
-    public void coletarItem(Item item){
-        if(item instanceof LancaDardos && inventario.possuiLancaDardos()){
+
+    public String coletarItem(Item item) {
+        if (item instanceof LancaDardos && inventario.possuiLancaDardos()) {
             inventario.getLancaDardos().adicionarMunicao(1);
-            System.out.println("  Munição adicionada ao Lança-Dardos! Total: " + 
-                    inventario.getLancaDardos().getMunicao());
-        } else{
+            return "Munição adicionada ao Lança-Dardos! Total: "
+                    + inventario.getLancaDardos().getMunicao();
+        } else {
             inventario.adicionar(item);
-            System.out.println("  Item coletado: " + item.getNome());
+            return "Item coletado: " + item.getNome();
         }
     }
-    
-    public void usarKitMedico(){
+
+    public String usarKitMedico() {
         KitMedico kit = inventario.getKitMedico();
-        
-        if(kit != null){
-            kit.usar(this);
+        if (kit != null) {
+            String msg = kit.usar(this);
             inventario.remover(kit);
-        } else{
-            System.out.println("  Você não possui Kit Médico.");
+            return msg;
         }
+        return "Você não possui Kit Médico.";
     }
-    
+
     @Override
-    public char getCaractere(){
+    public char getCaractere() {
         return 'J';
     }
 }

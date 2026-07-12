@@ -1,10 +1,14 @@
 package Jogador_Mapa_Outros;
 
 /**
+ * Classe abstrata que representa qualquer ser vivo do jogo (jogador e
+ * dinossauros), unificando os atributos de posição e saúde.
  *
  * @author Cliente
  */
 public abstract class Personagem extends Entidade {
+
+    private static final long serialVersionUID = 1L;
 
     private int saude, saudeMaxima;
     private int linha, coluna;
@@ -15,12 +19,12 @@ public abstract class Personagem extends Entidade {
         this.saude = saude;
         this.saudeMaxima = saude;
     }
-    
+
     public void setPosicao(int linha, int coluna) {
         this.linha = linha;
         this.coluna = coluna;
     }
-    
+
     public int getLinha() {
         return linha;
     }
@@ -29,29 +33,30 @@ public abstract class Personagem extends Entidade {
         return coluna;
     }
 
-    public int getSaude(){
+    public int getSaude() {
         return saude;
     }
-    
-    public int getSaudeMaxima(){
+
+    public int getSaudeMaxima() {
         return saudeMaxima;
     }
-    
-    public void setSaude(int saude){
+
+    public void setSaude(int saude) {
         this.saude = saude;
     }
-    
+
     public void recuperaSaude() {
         saude = saudeMaxima;
     }
-    
+
     public void receberDano(int dano) {
         saude -= dano;
-        if (saude < 0) saude = 0;
+        if (saude < 0) {
+            saude = 0;
+        }
     }
 
     public boolean estaVivo() {
         return saude > 0;
     }
-
 }

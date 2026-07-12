@@ -2,24 +2,24 @@ package Jogador_Mapa_Outros;
 
 import Dinossauros.*;
 import Caixas_E_Itens.*;
+import Exceptions.MovimentoInvalidoException;
 
-import java.io.IOException;
-
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-/**
- *
- * @author Cliente
- */
-public class Mapa {
+public class Mapa implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    private static final int[][] DIRECOES = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
 
     private Entidade[][] mapa;
     private Jogador jogador;
     private List<Dinossauro> dinossauros;
     private CaixaDeSuprimentos[][] camadaCaixas;
-    private Random rand = new Random();
 
     private int tamanho;
     private boolean debugAtivo = false;
@@ -35,152 +35,55 @@ public class Mapa {
         this.jogador = jogador;
     }
 
+    public Jogador getJogador() {
+        return jogador;
+    }
+
     public int getTamanho() {
         return tamanho;
     }
 
+    public List<Dinossauro> getDinossauros() {
+        return dinossauros;
+    }
+
     // -----------------
-    // MAPA
+    // GERAÇÃO — usados exclusivamente por GeradorDeMapa. O Mapa apenas
+    // expõe "como colocar coisas nele"; QUEM decide onde colocar é o
+    // GeradorDeMapa, mantendo essa responsabilidade fora desta classe.
     // -----------------
-    public void gerarMapaAleatorio() {
+    /**
+     * Esvazia o tabuleiro (matriz de entidades e camada de caixas).
+     */
+    public void limpar() {
         for (int i = 0; i < tamanho; i++) {
             for (int j = 0; j < tamanho; j++) {
                 mapa[i][j] = null;
             }
         }
         dinossauros.clear();
-
-        //Insere objeto Jogador no mapa
-        jogador.setPosicao(0, 0);
-        jogador.setSaude(jogador.getSaudeMaxima());
-        jogador.recuperaSaude();
-        mapa[0][0] = jogador;
-
-        //Insere objeto TiranossauroRex no mapa
-        TiranossauroRex trex = new TiranossauroRex(tamanho - 1, tamanho - 1);
-        mapa[tamanho - 1][tamanho - 1] = trex;
-        dinossauros.add(trex);
-
-        //Insere objetos Parede no mapa
-        insereParedes();
-
-        //Insere objetos Dinossauro
-        //2 Compsognatos, 2 Velociraptors, 5 Troodontes
-        insereDinossauro(new Compsognato(-1, -1));
-        insereDinossauro(new Compsognato(-1, -1));
-        insereDinossauro(new Velociraptor(-1, -1));
-        insereDinossauro(new Velociraptor(-1, -1));
-        insereDinossauro(new Troodonte(-1, -1));
-        insereDinossauro(new Troodonte(-1, -1));
-        insereDinossauro(new Troodonte(-1, -1));
-        insereDinossauro(new Troodonte(-1, -1));
-        insereDinossauro(new Troodonte(-1, -1));
-
-        //Insere objetos CaixaDeSuprimentos
-        insereCaixa(new KitMedico());
-        insereCaixa(new BastaoEletrico());
-        insereCaixa(new LancaDardos());
-        insereCaixa(new LancaDardos());
-        insereCaixa(new Compsognato(-1, -1));
     }
 
-    private void insereParedes() {
-        int total = tamanho * tamanho;
-        int numParedes = (int) (total * 0.20);
-        int colocadas = 0;
-        for (int p = 0; p < numParedes * 2 && colocadas < numParedes; p++) {
-            int lin = rand.nextInt(tamanho);
-            int col = rand.nextInt(tamanho);
-
-            if (mapa[lin][col] == null) {
-                mapa[lin][col] = new Parede();
-                colocadas++;
-            }
-        }
+    public void colocarEntidade(int linha, int coluna, Entidade entidade) {
+        mapa[linha][coluna] = entidade;
     }
 
-    private void insereDinossauro(Dinossauro dino) {
-        //Procura células livres aleatórias e com uma distância de 2 casas do jogador
-        for (int i = 0; i < tamanho * tamanho; i++) {
-            int lin = rand.nextInt(tamanho);
-            int col = rand.nextInt(tamanho);
-
-            if (mapa[lin][col] == null && (lin + col) > 2) {
-                dino.setPosicao(lin, col);
-                mapa[lin][col] = dino;
-                dinossauros.add(dino);
-                return;
-            }
-        }
-
-        //Se não encontrar procura a primeira célula livre
-        for (int lin = 0; lin < tamanho; lin++) {
-            for (int col = 0; col < tamanho; col++) {
-                if (mapa[lin][col] == null && (lin + col) > 1) {
-                    dino.setPosicao(lin, col);
-                    mapa[lin][col] = dino;
-                    dinossauros.add(dino);
-                    return;
-                }
-            }
-        }
+    public void adicionarDinossauro(Dinossauro dino) {
+        dinossauros.add(dino);
     }
 
-    private void insereCaixa(ConteudoCaixa conteudo) {
-        for (int i = 0; i < tamanho * tamanho; i++) {
-            int lin = rand.nextInt(tamanho);
-            int col = rand.nextInt(tamanho);
-
-            if (!(lin == 0 && col == 0) && camadaCaixas[lin][col] == null
-                    && !(mapa[lin][col] instanceof Parede)) {
-                camadaCaixas[lin][col] = new CaixaDeSuprimentos(conteudo);
-                return;
-            }
-        }
+    public boolean podeColocarCaixa(int linha, int coluna) {
+        return camadaCaixas[linha][coluna] == null && !(mapa[linha][coluna] instanceof Parede);
     }
 
-    public void imprimirMapa() {
-        // Cabeçalho com números de coluna
-        System.out.print("    ");
-        for (int j = 0; j < tamanho; j++) {
-            System.out.printf("%2d", j + 1);
-        }
-        System.out.println();
-
-        // Linha Superior
-        System.out.print("   +");
-        for (int j = 0; j < tamanho; j++) {
-            System.out.print("--");
-        }
-        System.out.println("+");
-
-        // -------------------------------------------------
-        // Impressão dos elementos
-        try {
-
-            for (int i = 0; i < tamanho; i++) {
-                // Letras de referência das linhas
-                System.out.print(" " + (char) ('A' + i) + " |");
-
-                for (int j = 0; j < tamanho; j++) {
-                    System.out.print(" " + getCelulaVisivel(i, j));
-                }
-                System.out.println(" |");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        // -------------------------------------------------
-
-        // Linha Inferior
-        System.out.print("   +");
-        for (int j = 0; j < tamanho; j++) {
-            System.out.print("--");
-        }
-        System.out.println("+");
+    public void colocarCaixa(int linha, int coluna, CaixaDeSuprimentos caixa) {
+        camadaCaixas[linha][coluna] = caixa;
     }
 
-    private char getCelulaVisivel(int linha, int coluna) {
+    // -----------------
+    // VISUALIZAÇÃO (linha de visão)
+    // -----------------
+    public char getCelulaVisivel(int linha, int coluna) {
         if (debugAtivo) {
             return getSimbolo(linha, coluna);
         }
@@ -191,15 +94,12 @@ public class Mapa {
         if (linha == linJogador && coluna == colJogador) {
             return 'J';
         }
-
         if (linha != linJogador && coluna != colJogador) {
             return '.';
         }
-
         if (temObstaculoEntre(linJogador, colJogador, linha, coluna)) {
             return '.';
         }
-
         return getSimbolo(linha, coluna);
     }
 
@@ -233,7 +133,6 @@ public class Mapa {
     private char getSimbolo(int linha, int coluna) {
         Entidade entidade = mapa[linha][coluna];
         CaixaDeSuprimentos caixa = camadaCaixas[linha][coluna];
-
         if (entidade != null) {
             return entidade.getCaractere();
         } else if (caixa != null) {
@@ -245,42 +144,39 @@ public class Mapa {
     // -----------------
     // JOGADOR
     // -----------------
-    public Dinossauro moverJogador(int linha, int coluna) {
+    public synchronized Dinossauro moverJogador(int linha, int coluna) throws MovimentoInvalidoException {
         int linhaAtual = jogador.getLinha();
         int colunaAtual = jogador.getColuna();
 
         int difLinha = Math.abs(linhaAtual - linha);
         int difColuna = Math.abs(colunaAtual - coluna);
 
-        if ((difLinha + difColuna) > 1) {
-            System.out.println("  Movimento Inválido! O jogador move apenas uma casa horizontal ou verticalmente");
-            return null;
+        if ((difLinha + difColuna) != 1) {
+            throw new MovimentoInvalidoException("O jogador só pode se mover uma casa na horizontal ou na vertical.");
         }
         if (linha < 0 || coluna < 0 || linha >= tamanho || coluna >= tamanho) {
-            System.out.println("  Posição fora do mapa!");
-            return null;
+            throw new MovimentoInvalidoException("Posição fora do mapa!");
         }
         if (mapa[linha][coluna] instanceof Parede) {
-            System.out.println("  Tem uma parede ali! Caminho bloqueado");
-            return null;
+            throw new MovimentoInvalidoException("Tem uma parede ali! Caminho bloqueado.");
         }
         if (mapa[linha][coluna] instanceof Dinossauro) {
             return (Dinossauro) mapa[linha][coluna];
         }
+
         mapa[jogador.getLinha()][jogador.getColuna()] = null;
         jogador.setPosicao(linha, coluna);
         mapa[linha][coluna] = jogador;
-
         return null;
     }
 
-    public void jogadorAvancaParaPosicaoDino(int linha, int coluna) {
+    public synchronized void jogadorAvancaParaPosicaoDino(int linha, int coluna) {
         mapa[jogador.getLinha()][jogador.getColuna()] = null;
         mapa[linha][coluna] = jogador;
         jogador.setPosicao(linha, coluna);
     }
 
-    public boolean fugir(int linha, int coluna) {
+    public synchronized boolean fugir(int linha, int coluna) {
         int linhaAtual = jogador.getLinha();
         int colunaAtual = jogador.getColuna();
 
@@ -300,107 +196,18 @@ public class Mapa {
         mapa[linhaAtual][colunaAtual] = null;
         jogador.setPosicao(linha, coluna);
         mapa[linha][coluna] = jogador;
-
         return true;
     }
 
-    // -----------------
-    // DINOSSAURO
-    // -----------------
-    public List<Dinossauro> moverDinossauros() {
-        int[][] direcoes = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
-        List<Dinossauro> atacantes = new ArrayList<>();
-
-        for (Dinossauro dino : new ArrayList<>(dinossauros)) {
-            if (!dino.seMove() || !dino.estaVivo()) {
-                continue;
-            }
-            int casas = dino.getCasasDeMovimento();
-            boolean encontrouJogador = false;
-
-            for (int passos = 0; passos < casas && !encontrouJogador; passos++) {
-                int[] ordem = embaralhar(new int[]{0, 1, 2, 3});
-                boolean moveu = false;
-
-                for (int indice : ordem) {
-                    int novaLinha = dino.getLinha() + direcoes[indice][0];
-                    int novaColuna = dino.getColuna() + direcoes[indice][1];
-
-                    if (novaLinha < 0 || novaLinha >= tamanho
-                            || novaColuna < 0 || novaColuna >= tamanho) {
-                        continue;
-                    }
-
-                    Entidade destino = mapa[novaLinha][novaColuna];
-
-                    if (destino == jogador) {
-                        atacantes.add(dino);
-                        encontrouJogador = true;
-                        moveu = true;
-                        break;
-                    }
-
-                    if (destino == null) {
-                        mapa[dino.getLinha()][dino.getColuna()] = null;
-                        dino.setPosicao(novaLinha, novaColuna);
-                        mapa[novaLinha][novaColuna] = dino;
-                        moveu = true;
-                        break;
-                    }
-                }
-                if (!moveu) {
-                    break;
-                }
-            }
-        }
-        return atacantes;
-    }
-
-    public int[] embaralhar(int[] array) {
-        for (int i = array.length - 1; i > 0; i--) {
-            int j = rand.nextInt(i + 1);
-            int temp = array[i];
-            array[i] = array[j];
-            array[j] = temp;
-        }
-        return array;
-    }
-
-    public void removerDinossauro(Dinossauro dino) {
-        if (mapa[dino.getLinha()][dino.getColuna()] == dino) {
-            mapa[dino.getLinha()][dino.getColuna()] = null;
-        }
-        dinossauros.remove(dino);
-    }
-
-    public boolean todosDerrotados() {
-        return dinossauros.isEmpty();
-    }
-
-    // -----------------
-    // CAIXA
-    // -----------------
-    public CaixaDeSuprimentos getCaixaEm(int linha, int coluna) {
-        return camadaCaixas[linha][coluna];
-    }
-
-    public void removerCaixa(int linha, int coluna) {
-        camadaCaixas[linha][coluna] = null;
-    }
-
-    public List<int[]> posicoesParaFuga() {
+    public synchronized List<int[]> posicoesParaFuga() {
         List<int[]> livres = new ArrayList<>();
-
         int linhaAtual = jogador.getLinha();
         int colunaAtual = jogador.getColuna();
 
-        int[][] direcoes = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
-
-        for (int[] d : direcoes) {
+        for (int[] d : DIRECOES) {
             int novaLinha = linhaAtual + d[0];
             int novaColuna = colunaAtual + d[1];
-            if (novaLinha < 0 || novaLinha >= tamanho
-                    || novaColuna < 0 || novaColuna >= tamanho) {
+            if (novaLinha < 0 || novaLinha >= tamanho || novaColuna < 0 || novaColuna >= tamanho) {
                 continue;
             }
             if (mapa[novaLinha][novaColuna] instanceof Parede) {
@@ -411,13 +218,100 @@ public class Mapa {
             }
             livres.add(new int[]{novaLinha, novaColuna});
         }
-
         return livres;
     }
 
+    // -----------------
+    // DINOSSAUROS — operações "primitivas" de tabuleiro.
+    // A ESTRATÉGIA de movimentação (para onde ir) é responsabilidade de
+    // cada subclasse de Dinossauro; o Mapa só sabe EXECUTAR um passo.
+    // -----------------
+    /**
+     * Resultado de uma tentativa de mover uma entidade uma casa no mapa.
+     */
+    public enum ResultadoPasso {
+        MOVEU,
+        BLOQUEADO,
+        ENCONTROU_JOGADOR
+    }
+
+    public synchronized boolean dentroDoMapa(int linha, int coluna) {
+        return linha >= 0 && linha < tamanho && coluna >= 0 && coluna < tamanho;
+    }
+
+    public synchronized boolean celulaLivre(int linha, int coluna) {
+        return dentroDoMapa(linha, coluna) && mapa[linha][coluna] == null;
+    }
+
+    public synchronized int getLinhaJogador() {
+        return jogador.getLinha();
+    }
+
+    public synchronized int getColunaJogador() {
+        return jogador.getColuna();
+    }
+
+    /**
+     * Tenta mover {@code dino} uma única casa para a posição indicada. É a
+     * única operação que efetivamente altera a matriz do mapa em nome de um
+     * dinossauro — chamada pelas próprias subclasses de {@link Dinossauro}
+     * dentro de {@link Dinossauro#mover(Mapa)}, que decidem PARA ONDE tentar
+     * ir.
+     *
+     * @return {@link ResultadoPasso#ENCONTROU_JOGADOR} se a posição de destino
+     * é a do jogador (nenhum movimento é realizado, combate deve começar);
+     * {@link ResultadoPasso#BLOQUEADO} se fora do mapa ou ocupada por
+     * parede/outro dinossauro; {@link ResultadoPasso#MOVEU} caso o passo tenha
+     * sido realizado com sucesso.
+     */
+    public synchronized ResultadoPasso tentarMoverEntidade(Dinossauro dino, int novaLinha, int novaColuna) {
+        if (!dentroDoMapa(novaLinha, novaColuna)) {
+            return ResultadoPasso.BLOQUEADO;
+        }
+        Entidade destino = mapa[novaLinha][novaColuna];
+        if (destino == jogador) {
+            return ResultadoPasso.ENCONTROU_JOGADOR;
+        }
+        if (destino != null) {
+            return ResultadoPasso.BLOQUEADO;
+        }
+        mapa[dino.getLinha()][dino.getColuna()] = null;
+        dino.setPosicao(novaLinha, novaColuna);
+        mapa[novaLinha][novaColuna] = dino;
+        return ResultadoPasso.MOVEU;
+    }
+
+    public synchronized void removerDinossauro(Dinossauro dino) {
+        if (mapa[dino.getLinha()][dino.getColuna()] == dino) {
+            mapa[dino.getLinha()][dino.getColuna()] = null;
+        }
+        dinossauros.remove(dino);
+    }
+
+    public synchronized boolean todosDerrotados() {
+        return dinossauros.isEmpty();
+    }
+
+    // -----------------
+    // CAIXA
+    // -----------------
+    public synchronized CaixaDeSuprimentos getCaixaEm(int linha, int coluna) {
+        return camadaCaixas[linha][coluna];
+    }
+
+    public synchronized void removerCaixa(int linha, int coluna) {
+        camadaCaixas[linha][coluna] = null;
+    }
+
+    // -----------------
+    // OUTROS
+    // -----------------
     public void setResetDebug() {
         debugAtivo = !debugAtivo;
-        System.out.println("  [DEBUG] " + (debugAtivo ? "ATIVADO" : "DESATIVADO") + ".");
+    }
+
+    public boolean isDebugAtivo() {
+        return debugAtivo;
     }
 
     public int letraParaLinha(char letra) {

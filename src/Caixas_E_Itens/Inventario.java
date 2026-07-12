@@ -1,13 +1,17 @@
 package Caixas_E_Itens;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Conjunto de itens que o jogador carrega consigo.
  *
  * @author Cliente
  */
-public class Inventario {
+public class Inventario implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private List<Item> itens;
 
@@ -22,8 +26,8 @@ public class Inventario {
     public void remover(Item item) {
         itens.remove(item);
     }
-    
-    public List<Item> getItens(){
+
+    public List<Item> getItens() {
         return itens;
     }
 
@@ -35,17 +39,17 @@ public class Inventario {
         }
         return false;
     }
-    
-    public KitMedico getKitMedico(){
-        for(Item item : itens){
-            if(item instanceof KitMedico){
-                return (KitMedico)item;
+
+    public KitMedico getKitMedico() {
+        for (Item item : itens) {
+            if (item instanceof KitMedico) {
+                return (KitMedico) item;
             }
         }
         return null;
     }
-    
-    public boolean possuiBastaoEletrico(){
+
+    public boolean possuiBastaoEletrico() {
         for (Item item : itens) {
             if (item instanceof BastaoEletrico) {
                 return true;
@@ -53,8 +57,17 @@ public class Inventario {
         }
         return false;
     }
-    
-    public boolean possuiLancaDardos(){
+
+    public BastaoEletrico getBastaoEletrico() {
+        for (Item item : itens) {
+            if (item instanceof BastaoEletrico) {
+                return (BastaoEletrico) item;
+            }
+        }
+        return null;
+    }
+
+    public boolean possuiLancaDardos() {
         for (Item item : itens) {
             if (item instanceof LancaDardos) {
                 return true;
@@ -62,14 +75,13 @@ public class Inventario {
         }
         return false;
     }
-    
-    public LancaDardos getLancaDardos(){
-        for(Item item : itens){
-            if(item instanceof LancaDardos){
-                return (LancaDardos)item;
+
+    public LancaDardos getLancaDardos() {
+        for (Item item : itens) {
+            if (item instanceof LancaDardos) {
+                return (LancaDardos) item;
             }
         }
         return null;
     }
-
 }

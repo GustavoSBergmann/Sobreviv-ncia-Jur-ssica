@@ -2,15 +2,20 @@ package Caixas_E_Itens;
 
 import Jogador_Mapa_Outros.Jogador;
 import Jogador_Mapa_Outros.Mapa;
-import java.util.Scanner;
+import java.util.Random;
 
 /**
+ * Arma de disparo à distância. Todo ataque com o Lança-Dardos é sempre
+ * crítico (2 de dano), mas consome uma munição por disparo.
  *
  * @author Cliente
  */
-public class LancaDardos extends Item {
+public class LancaDardos extends Arma {
+
+    private static final long serialVersionUID = 1L;
 
     private int municao;
+    private String ultimaMensagem = "";
 
     public LancaDardos() {
         super("Lança-Dardos");
@@ -26,19 +31,29 @@ public class LancaDardos extends Item {
     }
 
     public boolean temMunicao() {
-        return (municao > 0);
+        return municao > 0;
     }
 
-    public int atirar() {
+    @Override
+    public int calcularDano(Random rand) {
         if (municao <= 0) {
+            ultimaMensagem = "[Lança-Dardos] Sem munição!";
             return 0;
         }
         municao--;
+        ultimaMensagem = "[Lança-Dardos] Disparo certeiro — sempre crítico! (+2 de dano). "
+                + "Munição restante: " + municao;
         return 2;
     }
-    
+
     @Override
-    public void aoSerEncontrado(Jogador jogador, Mapa mapa, Scanner leitor){
-        jogador.coletarItem(this);
+    public String getUltimaMensagem() {
+        return ultimaMensagem;
+    }
+
+    @Override
+    public ResultadoCaixa aoSerEncontrado(Jogador jogador, Mapa mapa) {
+        String msg = jogador.coletarItem(this);
+        return new ResultadoCaixa(msg, null);
     }
 }
