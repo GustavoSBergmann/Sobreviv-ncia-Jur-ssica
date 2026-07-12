@@ -32,7 +32,7 @@ public class PainelJogo extends JPanel {
      * os componentes na tela (o que só acontece depois que a janela é
      * exibida pela primeira vez).
      */
-    private static final int TAMANHO_ICONE = 70;
+    private static final int TAMANHO_ICONE = 90;
 
     private final JanelaPrincipal janela;
 
