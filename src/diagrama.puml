@@ -1,0 +1,175 @@
+@startuml
+title Diagrama de Classes - SobrevivenciaJurassica
+
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+
+
+'==========================
+' Interfaces
+'==========================
+
+interface Movivel
+interface ConteudoCaixa
+
+'==========================
+' Classes Abstratas
+'==========================
+
+abstract class Entidade
+together{
+    
+    abstract class Personagem
+    class Parede
+    class CaixaDeSuprimentos
+}
+
+together{
+    class Jogador
+    abstract class Dinossauro
+}
+
+abstract class Item
+abstract class Arma
+
+'==========================
+' Personagens
+'==========================
+
+together{
+    class Velociraptor
+    class Troodonte
+    class TiranossauroRex
+    class Compsognato
+}
+
+'==========================
+' Itens
+'==========================
+
+class BastaoEletrico
+class LancaDardos
+class KitMedico
+class Inventario
+
+class ResultadoCaixa
+
+'==========================
+' Mapa
+'==========================
+
+together{
+    class Mapa
+    class GeradorDeMapa
+}
+
+'==========================
+' Combate
+'==========================
+
+class Combate
+
+'==========================
+' Persistência
+'==========================
+package Persistencia{
+    class EstadoJogo
+    class GerenciadorPersistencia
+}
+
+'==========================
+' Interface gráfica
+'==========================
+
+package GUI{
+    class JanelaPrincipal
+    class PainelBoasVindas
+    class PainelDificuldade
+    class PainelJogo
+    class PainelResultado
+    class CombateDialog
+    class ThreadDinossauros
+}
+
+'==========================
+' Exceções
+'==========================
+package Exceptions{
+    class MovimentoInvalidoException
+    class PersistenciaException
+    class SemMunicaoException
+}
+
+'==========================
+' Heranças
+'==========================
+
+Entidade <|-- Personagem
+Entidade <|-- Parede
+Entidade <|-- CaixaDeSuprimentos
+
+Personagem <|-- Jogador
+Personagem <|-- Dinossauro
+
+Dinossauro <|-- Velociraptor
+Dinossauro <|-- Troodonte
+Dinossauro <|-- TiranossauroRex
+Dinossauro <|-- Compsognato
+
+Item <|-- Arma
+Item <|-- KitMedico
+
+Arma <|-- BastaoEletrico
+Arma <|-- LancaDardos
+
+'==========================
+' Interfaces
+'==========================
+
+Movivel <|.. Dinossauro
+ConteudoCaixa <|.. Item
+ConteudoCaixa <|.. Compsognato
+
+'==========================
+' Agregações / Composições
+'==========================
+
+Mapa o-- "*" Entidade
+Inventario o-- "*" Item
+
+EstadoJogo o-- Jogador
+EstadoJogo o-- Mapa
+
+'==========================
+' Associações
+'==========================
+
+Jogador --> Inventario
+Jogador --> Mapa
+Jogador --> Item
+
+Dinossauro --> Mapa
+
+Mapa --> GeradorDeMapa
+
+CaixaDeSuprimentos --> ResultadoCaixa
+CaixaDeSuprimentos --> ConteudoCaixa
+
+Combate --> Jogador
+Combate --> Dinossauro
+Combate --> Mapa
+
+GerenciadorPersistencia --> EstadoJogo
+
+JanelaPrincipal --> PainelBoasVindas
+JanelaPrincipal --> PainelDificuldade
+JanelaPrincipal --> PainelJogo
+JanelaPrincipal --> PainelResultado
+
+PainelJogo --> Jogador
+PainelJogo --> Mapa
+PainelJogo --> ThreadDinossauros
+
+CombateDialog --> Combate
+
+@enduml
