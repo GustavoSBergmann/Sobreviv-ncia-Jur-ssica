@@ -13,15 +13,6 @@ import Dinossauros.Velociraptor;
 
 import java.util.Random;
 
-/**
- * Responsável apenas por POVOAR um {@link Mapa} recém-criado: posiciona
- * o jogador, os dinossauros, as paredes e as caixas de suprimentos.
- * Depois de gerado, todas as consultas e movimentações do jogo em si são
- * feitas diretamente pela classe {@link Mapa} — esta classe só existe
- * para a etapa única de "sortear o cenário inicial".
- *
- * @author Cliente
- */
 public class GeradorDeMapa {
 
     private final Random rand = new Random();

@@ -15,23 +15,8 @@ import java.awt.event.*;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Painel principal da jogabilidade: exibe o tabuleiro como uma grade de botões,
- * o status do jogador e as ações disponíveis (Cura, Debug, Salvar, Sair).
- * Também gerencia o ciclo de vida da {@link ThreadDinossauros}, única thread
- * responsável por movimentar os dinossauros do mapa.
- *
- * @author Cliente
- */
 public class PainelJogo extends JPanel {
 
-    /**
-     * Tamanho fixo (em pixels) de cada ícone do tabuleiro. Usar um valor
-     * fixo — em vez de perguntar ao próprio JButton seu getWidth()/
-     * getHeight() — evita depender do LayoutManager já ter posicionado
-     * os componentes na tela (o que só acontece depois que a janela é
-     * exibida pela primeira vez).
-     */
     private static final int TAMANHO_ICONE = 90;
 
     private final JanelaPrincipal janela;
@@ -44,7 +29,10 @@ public class PainelJogo extends JPanel {
     private JLabel labelStatus;
     private JButton btnCura;
 
-    /** Cache dos ícones já carregados e redimensionados, para não reler o disco a cada atualização. */
+    /**
+     * Cache dos ícones já carregados e redimensionados, para não reler o disco
+     * a cada atualização.
+     */
     private final Map<Character, ImageIcon> cacheIcones = new HashMap<>();
 
     private ThreadDinossauros threadDinossauros;
@@ -139,7 +127,6 @@ public class PainelJogo extends JPanel {
                 //celula.setFont(new Font("Monospaced", Font.BOLD, 14));
                 celula.setMargin(new Insets(2, 2, 2, 2));
                 celula.setPreferredSize(new Dimension(TAMANHO_ICONE, TAMANHO_ICONE));
-                
 
                 celula.addActionListener(e -> moverJogadorGUI(linha, coluna));
                 celulas[lin][col] = celula;
@@ -167,13 +154,6 @@ public class PainelJogo extends JPanel {
         }
     }
 
-    /**
-     * Retorna o ícone correspondente ao símbolo, já redimensionado. Usa
-     * um cache para carregar e redimensionar cada imagem apenas uma vez
-     * — sem isso, releríamos e reescalaríamos o PNG do disco a cada
-     * atualização da grade (que acontece a cada movimento de qualquer
-     * dinossauro).
-     */
     private ImageIcon imagemParaSimbolo(char simbolo) {
         return cacheIcones.computeIfAbsent(simbolo, this::carregarIcone);
     }
@@ -209,9 +189,6 @@ public class PainelJogo extends JPanel {
 
         ImageIcon iconeOriginal = new ImageIcon(arquivo);
 
-        // Tamanho FIXO — não depende de nenhum componente já ter sido
-        // desenhado na tela, então funciona mesmo na primeira chamada,
-        // antes da janela aparecer.
         Image imagemRedimensionada = iconeOriginal.getImage().getScaledInstance(
                 TAMANHO_ICONE, TAMANHO_ICONE, java.awt.Image.SCALE_SMOOTH);
 
@@ -292,11 +269,6 @@ public class PainelJogo extends JPanel {
     // ------------------------------------------------------------
     //  COMBATE
     // ------------------------------------------------------------
-    /**
-     * Chamado pela {@link ThreadDinossauros} (via {@code invokeLater}, portanto
-     * já na Event Dispatch Thread) quando um dinossauro encontra o jogador
-     * durante sua movimentação autônoma.
-     */
     public void aoDinossauroEncontrarJogador(Dinossauro dino) {
         if (jogoEncerrado || combateEmAndamento || !jogador.estaVivo() || !dino.estaVivo()) {
             threadDinossauros.retomar();

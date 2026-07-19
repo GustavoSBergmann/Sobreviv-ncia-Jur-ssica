@@ -8,13 +8,6 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Janela modal (JDialog) que conduz um combate entre o jogador e um dinossauro,
- * substituindo a antiga interação via console/Scanner por botões e caixas de
- * diálogo do Swing.
- *
- * @author Cliente
- */
 public class CombateDialog extends JDialog {
 
     private final Combate combate;

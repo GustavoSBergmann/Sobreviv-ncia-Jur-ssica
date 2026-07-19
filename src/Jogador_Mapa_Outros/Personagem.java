@@ -1,11 +1,5 @@
 package Jogador_Mapa_Outros;
 
-/**
- * Classe abstrata que representa qualquer ser vivo do jogo (jogador e
- * dinossauros), unificando os atributos de posição e saúde.
- *
- * @author Cliente
- */
 public abstract class Personagem extends Entidade {
 
     private static final long serialVersionUID = 1L;

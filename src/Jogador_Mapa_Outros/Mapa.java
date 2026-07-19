@@ -47,14 +47,6 @@ public class Mapa implements Serializable {
         return dinossauros;
     }
 
-    // -----------------
-    // GERAÇÃO — usados exclusivamente por GeradorDeMapa. O Mapa apenas
-    // expõe "como colocar coisas nele"; QUEM decide onde colocar é o
-    // GeradorDeMapa, mantendo essa responsabilidade fora desta classe.
-    // -----------------
-    /**
-     * Esvazia o tabuleiro (matriz de entidades e camada de caixas).
-     */
     public void limpar() {
         for (int i = 0; i < tamanho; i++) {
             for (int j = 0; j < tamanho; j++) {
@@ -222,9 +214,7 @@ public class Mapa implements Serializable {
     }
 
     // -----------------
-    // DINOSSAUROS — operações "primitivas" de tabuleiro.
-    // A ESTRATÉGIA de movimentação (para onde ir) é responsabilidade de
-    // cada subclasse de Dinossauro; o Mapa só sabe EXECUTAR um passo.
+    // DINOSSAUROS
     // -----------------
     /**
      * Resultado de uma tentativa de mover uma entidade uma casa no mapa.
@@ -251,19 +241,6 @@ public class Mapa implements Serializable {
         return jogador.getColuna();
     }
 
-    /**
-     * Tenta mover {@code dino} uma única casa para a posição indicada. É a
-     * única operação que efetivamente altera a matriz do mapa em nome de um
-     * dinossauro — chamada pelas próprias subclasses de {@link Dinossauro}
-     * dentro de {@link Dinossauro#mover(Mapa)}, que decidem PARA ONDE tentar
-     * ir.
-     *
-     * @return {@link ResultadoPasso#ENCONTROU_JOGADOR} se a posição de destino
-     * é a do jogador (nenhum movimento é realizado, combate deve começar);
-     * {@link ResultadoPasso#BLOQUEADO} se fora do mapa ou ocupada por
-     * parede/outro dinossauro; {@link ResultadoPasso#MOVEU} caso o passo tenha
-     * sido realizado com sucesso.
-     */
     public synchronized ResultadoPasso tentarMoverEntidade(Dinossauro dino, int novaLinha, int novaColuna) {
         if (!dentroDoMapa(novaLinha, novaColuna)) {
             return ResultadoPasso.BLOQUEADO;

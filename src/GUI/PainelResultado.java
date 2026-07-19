@@ -3,12 +3,6 @@ package GUI;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Tela final, exibida após vitória ou derrota, com as opções
- * "Reiniciar Jogo" e "Novo Jogo".
- *
- * @author Cliente
- */
 public class PainelResultado extends JPanel {
 
     private final JLabel mensagem;

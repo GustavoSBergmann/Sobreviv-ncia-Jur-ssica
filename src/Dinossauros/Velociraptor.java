@@ -2,13 +2,6 @@ package Dinossauros;
 
 import Jogador_Mapa_Outros.Mapa;
 
-/**
- * Dinossauro ágil: move-se aleatoriamente por até duas casas a cada
- * passo, podendo parar na primeira caso encontre o jogador. É muito
- * difícil de acertar com arma de disparo.
- *
- * @author Cliente
- */
 public class Velociraptor extends Dinossauro {
 
     private static final long serialVersionUID = 1L;

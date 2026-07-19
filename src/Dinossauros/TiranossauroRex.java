@@ -2,12 +2,6 @@ package Dinossauros;
 
 import Jogador_Mapa_Outros.Mapa;
 
-/**
- * Tipo especial e colossal. Não é possível matá-lo com as mãos nuas, e
- * por ser muito grande ele não se move pelo cenário.
- *
- * @author Cliente
- */
 public class TiranossauroRex extends Dinossauro {
 
     private static final long serialVersionUID = 1L;

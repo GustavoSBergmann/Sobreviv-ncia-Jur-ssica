@@ -4,19 +4,6 @@ import Jogador_Mapa_Outros.Jogador;
 import Jogador_Mapa_Outros.Mapa;
 import java.util.Random;
 
-/**
- * Arma de combate corpo a corpo que substitui o ataque com as mãos nuas
- * assim que é coletada.
- *
- * Regra do dado (6 lados):
- * <ul>
- *   <li>maior que 5 (ou seja, 6): golpe crítico, 2 de dano;</li>
- *   <li>igual a 1: erra o golpe, 0 de dano;</li>
- *   <li>qualquer outro valor: golpe normal, 1 de dano.</li>
- * </ul>
- *
- * @author Cliente
- */
 public class BastaoEletrico extends Arma {
 
     private static final long serialVersionUID = 1L;

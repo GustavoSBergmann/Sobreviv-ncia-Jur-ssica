@@ -2,14 +2,6 @@ package Dinossauros;
 
 import Jogador_Mapa_Outros.Mapa;
 
-/**
- * Tipo comum de dinossauro. Possui um comportamento de movimentação mais
- * estratégico: desloca-se em direção à posição do jogador. A resistência
- * dele contra golpes de mãos nuas não críticos é tratada diretamente em
- * {@code Combate}, já que é uma regra específica de uma única espécie.
- *
- * @author Cliente
- */
 public class Troodonte extends Dinossauro {
 
     private static final long serialVersionUID = 1L;

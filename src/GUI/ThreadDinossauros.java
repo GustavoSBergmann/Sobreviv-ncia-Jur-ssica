@@ -43,11 +43,6 @@ public class ThreadDinossauros extends Thread {
         }
     }
 
-    /**
-     * Move, em sequência, cada dinossauro vivo que se move. Para assim
-     * que um deles encontra o jogador (o restante tentará se mover no
-     * próximo ciclo, depois que o combate terminar).
-     */
     private boolean moverTodosOsDinossauros() {
         for (Dinossauro dino : new ArrayList<>(mapa.getDinossauros())) {
             if (!(dino instanceof Movivel) || !dino.estaVivo()) {

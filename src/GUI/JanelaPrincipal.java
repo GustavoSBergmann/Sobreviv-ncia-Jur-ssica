@@ -11,14 +11,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
-/**
- * Janela principal da aplicação. Utiliza um {@link CardLayout} para
- * alternar entre as telas de boas-vindas, escolha de dificuldade, jogo e
- * resultado, e concentra a lógica de navegação e de criação/persistência
- * do estado da partida.
- *
- * @author Cliente
- */
 public class JanelaPrincipal extends JFrame {
 
     private static final int TAMANHO_MAPA = 10;

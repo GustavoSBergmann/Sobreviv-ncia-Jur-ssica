@@ -35,10 +35,6 @@ public class Combate {
         return mapa;
     }
 
-    /**
-     * Ataque corpo a corpo — com o Bastão Elétrico, se equipado, ou com
-     * as mãos nuas caso contrário.
-     */
     public String atacarComMaosOuBastao() {
         boolean temBastao = jogador.getInventario().possuiBastaoEletrico();
 
@@ -78,12 +74,6 @@ public class Combate {
         return msg;
     }
 
-    /**
-     * Ataque com o Lança-Dardos. Sempre crítico, mas gasta uma munição.
-     *
-     * @throws SemMunicaoException caso o jogador não possua a arma ou
-     * esteja sem munição.
-     */
     public String atacarComDardos() throws SemMunicaoException {
         if (!jogador.getInventario().possuiLancaDardos()) {
             throw new SemMunicaoException("Você não possui um Lança-Dardos.");
@@ -103,7 +93,6 @@ public class Combate {
         return lanca.getUltimaMensagem();
     }
 
-    /** Executa o contra-ataque do dinossauro, incluindo o teste de esquiva do jogador. */
     public String turnoDinoContraAtaca() {
         int dado3 = rand.nextInt(3) + 1;
         StringBuilder sb = new StringBuilder();
@@ -122,7 +111,6 @@ public class Combate {
         return sb.toString();
     }
 
-    /** Tenta fugir para uma posição adjacente livre. */
     public boolean tentarFugir(int linha, int coluna) {
         return mapa.fugir(linha, coluna);
     }

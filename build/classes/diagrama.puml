@@ -2,6 +2,7 @@
 title Diagrama de Classes - SobrevivenciaJurassica
 
 skinparam classAttributeIconSize 0
+
 skinparam linetype ortho
 
 
@@ -94,11 +95,7 @@ package GUI{
 '==========================
 ' Exceções
 '==========================
-package Exceptions{
-    class MovimentoInvalidoException
-    class PersistenciaException
-    class SemMunicaoException
-}
+
 
 '==========================
 ' Heranças
@@ -137,8 +134,8 @@ ConteudoCaixa <|.. Compsognato
 Mapa o-- "*" Entidade
 Inventario o-- "*" Item
 
-EstadoJogo o-- Jogador
-EstadoJogo o-- Mapa
+EstadoJogo --> Jogador
+EstadoJogo --> Mapa
 
 '==========================
 ' Associações
@@ -169,6 +166,8 @@ JanelaPrincipal --> PainelResultado
 PainelJogo --> Jogador
 PainelJogo --> Mapa
 PainelJogo --> ThreadDinossauros
+PainelJogo -up-> CombateDialog
+PainelJogo --> Combate
 
 CombateDialog --> Combate
 

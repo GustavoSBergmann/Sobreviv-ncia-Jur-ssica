@@ -7,12 +7,6 @@ import Jogador_Mapa_Outros.Mapa;
 
 import java.util.Random;
 
-/**
- * O tipo mais simples de inimigo. Não se move pelo mapa, mas pode aparecer
- * escondido dentro de uma caixa de suprimentos, pegando o jogador de surpresa.
- *
- * @author Cliente
- */
 public class Compsognato extends Dinossauro implements ConteudoCaixa {
 
     private static final long serialVersionUID = 1L;

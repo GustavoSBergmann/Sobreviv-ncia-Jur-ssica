@@ -5,12 +5,6 @@ import Persistencia.GerenciadorPersistencia;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Tela inicial de boas-vindas com as opções "Jogar", "Carregar Jogo" e
- * "Sair".
- *
- * @author Cliente
- */
 public class PainelBoasVindas extends JPanel {
 
     public PainelBoasVindas(JanelaPrincipal janela) {

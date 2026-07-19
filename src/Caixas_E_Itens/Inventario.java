@@ -4,11 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Conjunto de itens que o jogador carrega consigo.
- *
- * @author Cliente
- */
 public class Inventario implements Serializable {
 
     private static final long serialVersionUID = 1L;

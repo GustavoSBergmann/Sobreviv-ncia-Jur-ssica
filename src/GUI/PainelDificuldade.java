@@ -3,12 +3,6 @@ package GUI;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Tela de escolha da dificuldade, que define o nível de percepção do
- * jogador.
- *
- * @author Cliente
- */
 public class PainelDificuldade extends JPanel {
 
     public PainelDificuldade(JanelaPrincipal janela) {

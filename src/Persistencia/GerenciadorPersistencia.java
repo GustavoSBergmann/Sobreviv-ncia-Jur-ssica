@@ -4,12 +4,6 @@ import Exceptions.PersistenciaException;
 
 import java.io.*;
 
-/**
- * Responsável por gravar e ler o progresso do jogo em arquivo, usando
- * serialização de objetos Java.
- *
- * @author Cliente
- */
 public class GerenciadorPersistencia {
 
     private static final String ARQUIVO_PADRAO = "sobrevivencia_save.dat";

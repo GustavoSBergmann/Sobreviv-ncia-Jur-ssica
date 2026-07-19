@@ -4,12 +4,6 @@ import Jogador_Mapa_Outros.Jogador;
 import Jogador_Mapa_Outros.Mapa;
 import java.util.Random;
 
-/**
- * Arma de disparo à distância. Todo ataque com o Lança-Dardos é sempre
- * crítico (2 de dano), mas consome uma munição por disparo.
- *
- * @author Cliente
- */
 public class LancaDardos extends Arma {
 
     private static final long serialVersionUID = 1L;
